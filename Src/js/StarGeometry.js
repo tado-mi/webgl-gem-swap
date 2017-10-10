@@ -6,14 +6,15 @@ let StarGeometry = function(gl) {
     return angle * (Math.PI / 180);
   }
 
-  var vertexArray = [0, 0, 0.5];
+  var vertexArray = [0, 0, 0];
   var degree = 18;
   for (var i = 0; i < 5; i++){
-    vertexArray.push(0.7*Math.cos(toRadins(degree)), 0.7*Math.sin(toRadins(degree)), 0.5,);
+    vertexArray.push(0.8*Math.cos(toRadins(degree)), 0.8*Math.sin(toRadins(degree)), 0,);
     degree += 36;
-    vertexArray.push(0.3*Math.cos(toRadins(degree)), 0.3*Math.sin(toRadins(degree)), 0.5,);
+    vertexArray.push(0.34*Math.cos(toRadins(degree)), 0.34*Math.sin(toRadins(degree)), 0,);
     degree += 36;
   }
+  vertexArray.push(0, 0, 0);
 
   // vertex buffer
   this.vertexBuffer = gl.createBuffer();
@@ -26,7 +27,22 @@ let StarGeometry = function(gl) {
   this.colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
   gl.bufferData(gl.ARRAY_BUFFER,
-    new Float32Array(vertexArray),
+    new Float32Array([
+      255/255,204/255,0/255,
+      255/255,204/255,0/255,
+      255/255,204/255,0/255,
+      204/255,153/255,0/255,
+      204/255,153/255,0/255,
+      255/255,204/255,0/255,
+      255/255,204/255,0/255,
+      204/255,153/255,0/255,
+      204/255,153/255,0/255,
+      255/255,204/255,0/255,
+      255/255,204/255,0/255,
+      204/255,153/255,0/255,
+      ]
+
+      ),
     gl.STATIC_DRAW);
 
   // index buffer
@@ -35,15 +51,15 @@ let StarGeometry = function(gl) {
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
     new Uint16Array([
       0, 1, 2,
-      0, 2, 3,
+      11, 2, 3,
       0, 3, 4,
-      0, 4, 5,
+      11, 4, 5,
       0, 5, 6,
-      0, 6, 7,
+      11, 6, 7,
       0, 7, 8,
-      0, 8, 9,
+      11, 8, 9,
       0, 9, 10,
-      0, 10, 1,
+      11, 10, 1,
     ]),
     gl.STATIC_DRAW);
 
