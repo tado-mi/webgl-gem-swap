@@ -1,13 +1,13 @@
-"use strict"; 
-let GameObject = function(mesh) { 
+"use strict";
+let GameObject = function(mesh) {
   this.mesh = mesh;
-  this.position = new Vec3(-55, -55, 0); 
-  this.orientation = 0; 
-  this.scale = new Vec3(0.45, 0.45, 1); 
+  this.position = new Vector3D(-55, -55, 0);
+  this.orientation = 0;
+  this.scale = new Vector3D(0.45, 0.45, 1);
   this.angularVelocity = 0;
-  this.rotateAxis = new Vec3(0,0,0);
-  this.featherFall = new Vec3(0,0,0);
-  this.modelMatrix = new Mat4(); 
+  this.rotateAxis = new Vector3D(0,0,0);
+  this.featherFall = new Vector3D(0,0,0);
+  this.modelMatrix = new Mat4();
   this.startShrink = false;
   this.isFalling = false;
   this.typeID;
@@ -55,8 +55,8 @@ GameObject.prototype.shrink = function(){
 }
 
 
-GameObject.prototype.updateModelMatrix = function(){ 
-// TODO: set the model matrix according to the 
+GameObject.prototype.updateModelMatrix = function(){
+// TODO: set the model matrix according to the
 // position, orientation, and scale
   this.modelMatrix.set().
     scale(this.scale).
@@ -66,22 +66,20 @@ GameObject.prototype.updateModelMatrix = function(){
     translate(this.position);
 };
 
-GameObject.prototype.draw = function(){ 
+GameObject.prototype.draw = function(){
   this.updateModelMatrix();
-// TODO: Set the uniform modelViewProjMatrix 
-//(reflected in the material) from the modelMatrix (no camera yet). 
+// TODO: Set the uniform modelViewProjMatrix
+//(reflected in the material) from the modelMatrix (no camera yet).
 //Operator = cannot be used. Use Mat4 methods set() and/or mul().
   this.mesh.material.modelViewProjMatrix.set().mul(this.modelMatrix);
-  this.mesh.draw(); 
+  this.mesh.draw();
 };
 
-GameObject.prototype.draw = function(camera){ 
+GameObject.prototype.draw = function(camera){
   this.updateModelMatrix();
 // TODO: Set the uniform modelViewProjMatrix (reflected in the material) to modelMatrix multiplied by the camera’s viewProjMatrix. Use Mat4 methods set() and/or mul().
   this.mesh.material.modelViewProjMatrix.set().
   	mul(this.modelMatrix).
     mul(camera.viewProjMatrix);
-  this.mesh.draw(); 
+  this.mesh.draw();
 };
-
-
