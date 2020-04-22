@@ -1,113 +1,165 @@
-// App constructor
-let App = function(canvas, overlay) {
-	this.canvas = canvas;
-	this.overlay = overlay;
-	this.keysPressed = {};
+class App {
 
-	this.mouse = {};
-	this.mouse["Down"] = new Vec4();
-	this.mouse["Up"] = new Vec4();
-	this.mouse["Move"] = new Vec4();
-	this.mouse["PressedDown"] = false;
-	this.mouse["PressedMove"] = false;
-	this.mouse["PressedUp"] = false;
-	
-	// if no GL support, cry
-	this.gl = canvas.getContext("experimental-webgl");
-	if (this.gl === null) {
-		throw new Error("Browser does not support WebGL");
-	}
-	// create a simple scene
-	this.scene = new Scene(this.gl);
-	this.resize();
+	constructor(canvas, overlay) {
 
-	this.gl.pendingResources = {};
+		this.canvas = canvas;
+		this.overlay = overlay;
 
-};
+		this.mouse = {
 
-// match WebGL rendering resolution and viewport to the canvas size
-App.prototype.resize = function() {
-	this.canvas.width = this.canvas.clientWidth;
-	this.canvas.height = this.canvas.clientHeight;
-	this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-	this.scene.camera.setAspectRatio(
-	    this.canvas.clientWidth /
-	    this.canvas.clientHeight );
+			'Down': new Vec4(),
+			'Up':		new Vec4(),
+			'Move':	new Vec4(),
 
-};
+			'PressedDown': false,
+			'PressedMove': false,
+			'PressedUp':	 false
 
-App.prototype.registerEventHandlers = function() {
-	let theApp = this;
-	document.onkeydown = function(event) {
-		//jshint unused:false
-		theApp.keysPressed[keyboardMap[event.keyCode]] = true;
-	};
-	document.onkeyup = function(event) {
-		//jshint unused:false
-		theApp.keysPressed[keyboardMap[event.keyCode]] = false;
-	};
-	this.canvas.onmousedown = function(event) {
-		//jshint unused:false
-		theApp.mouse["pressedDown"] = true;
-		theApp.mouse["pressedMove"] = true;
-		var x = 2 * event.clientX / theApp.canvas.width - 1; 
-		var y = -2 * event.clientY / theApp.canvas.height + 1;
-		let viewProjMatrixInverse = theApp.scene.camera.viewProjMatrix.clone().invert();
-		theApp.mouse["Down"] = new Vec4(x,y).mul(viewProjMatrixInverse);
+		};
+
+		this.keysPressed = {};
+
+		this.gl = canvas.getContext("experimental-webgl");
+		if (this.gl === null) {
+			console.log('--- this browser does not support webgl');
+		}
+
+		// create a simple scene
+		this.scene = new Scene(this.gl);
+		this.resize();
+
+		this.gl.pendingResources = {};
 
 	};
-	this.canvas.onmousemove = function(event) {
-		//jshint unused:false
-		var x = 2 * event.clientX / theApp.canvas.width - 1; 
-		var y = -2 * event.clientY / theApp.canvas.height + 1;
-		let viewProjMatrixInverse = theApp.scene.camera.viewProjMatrix.clone().invert();
-		theApp.mouse["Move"] = new Vec4(x,y).mul(viewProjMatrixInverse);
 
-		event.stopPropagation();
+	// match WebGL rendering resolution and viewport to the canvas size
+	resize() {
+
+		const w = this.canvas.clientWidth;
+		const h = this.canvas.clientHeight;
+
+		this.gl.viewport(0, 0, w, h);
+		this.scene.camera.setAspectRatio(w / h);
+
+		this.canvas.width  = w;
+		this.canvas.height = h;
+
 	};
-	this.canvas.onmouseout = function(event) {
-		//jshint unused:false
+
+	// register event handlers
+	register() {
+
+		const w = this.canvas.width;
+		const h = this.canvas.height;
+
+		// view projection matrix inverse
+		const matrix = this.scene.camera.matrix.clone().invert();
+
+		const app = this;
+
+		document.onkeydown = function(event) {
+
+			app.keysPressed[keyboardMap[event.keyCode]] = true;
+
+		};
+
+		document.onkeyup = function(event) {
+
+			app.keysPressed[keyboardMap[event.keyCode]] = false;
+
+		};
+
+		this.canvas.onmousedown = function(event) {
+
+			app.mouse['pressedDown'] = true;
+			app.mouse['pressedMove'] = true;
+
+			var x = event.clientX, y = event.clientY;
+
+			x =  2 * (x / w) - 1;
+			y = -2 * (y / h) + 1;
+
+			app.mouse['Down'] = new Vec4(x, y).mul(matrix);
+
+		};
+
+		this.canvas.onmousemove = function(event) {
+
+			var x = event.clientX, y = event.clientY;
+
+			x =  2 * (x / w) - 1;
+			y = -2 * (y / h) + 1;
+
+			app.mouse['Move'] = new Vec4(x, y).mul(matrix);
+
+			event.stopPropagation();
+
+		};
+
+		this.canvas.onmouseout = function(event) {
+
+		};
+
+		this.canvas.onmouseup = function(event) {
+
+			app.mouse['pressedUp'] = true;
+			app.mouse['pressedMove'] = false;
+
+			var x = event.clientX, y = event.clientY;
+
+			x =  2 * (x / w) - 1;
+			y = -2 * (y / h) + 1;
+
+			app.mouse['Up'] = new Vec4(x, y).mul(matrix);
+
+		};
+
+		window.addEventListener('resize', function() {
+
+			app.resize();
+
+		});
+
+		window.requestAnimationFrame(function() {
+
+			app.update();
+
+		});
+
 	};
-	this.canvas.onmouseup = function(event) {
-		//jshint unused:false
-		theApp.mouse["pressedUp"] = true;
-		theApp.mouse["pressedMove"] = false;
-		var x = 2 * event.clientX / theApp.canvas.width - 1; 
-		var y = -2 * event.clientY / theApp.canvas.height + 1;
-		let viewProjMatrixInverse = theApp.scene.camera.viewProjMatrix.clone().invert();
-		theApp.mouse["Up"] = new Vec4(x,y).mul(viewProjMatrixInverse);
+
+	// animation frame update
+	update() {
+
+		const pendingResources = Object.keys(this.gl.pendingResources);
+		if (pendingResources.length === 0) {
+
+			// animate and draw scene
+			this.scene.update(this.gl, this.keysPressed, this.mouse);
+
+		} else {
+
+			this.overlay.innerHTML = 'Loading: ' + pendingResources;
+
+		}
+
+		// refresh
+		const app = this;
+		window.requestAnimationFrame(function() {
+			app.update();
+		});
 	};
-	window.addEventListener('resize', function() {
-		theApp.resize();
-	});
-	window.requestAnimationFrame(function() {
-		theApp.update();
-	});
-};
 
-// animation frame update
-App.prototype.update = function() {
 
-	let pendingResourceNames = Object.keys(this.gl.pendingResources);
-	if (pendingResourceNames.length === 0) {
-		// animate and draw scene
-		this.scene.update(this.gl,this.keysPressed,this.mouse);
-	} else {
-		this.overlay.innerHTML = "Loading: " + pendingResourceNames;
-	}
-
-	// refresh
-	let theApp = this;
-	window.requestAnimationFrame(function() {
-		theApp.update();
-	});
-};
+}
 
 // entry point from HTML
 window.addEventListener('load', function() {
-	let canvas = document.getElementById("canvas");
-	let overlay = document.getElementById("overlay");
 
-	let app = new App(canvas, overlay);
-	app.registerEventHandlers();
+	const c = document.getElementById("canvas");
+	const o = document.getElementById("overlay");
+
+	const app = new App(c, o);
+	app.register();
+
 });

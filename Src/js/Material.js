@@ -1,24 +1,37 @@
 "use strict";
-let Material = function(gl, program) {
-  this.gl = gl;
-  this.program = program;
-  let theMaterial = this;
-  Object.keys(program.uniforms).forEach(function(uniformName) {
-    let uniform = program.uniforms[uniformName];
-    let reflectionVariable =
-        UniformReflection.makeVar(gl,
-                              uniform.type, uniform.size);
-    Object.defineProperty(theMaterial, uniformName,
-				{value: reflectionVariable} );
-  });
-};
 
-Material.prototype.commit = function() {
-  let gl = this.gl;
-  this.program.commit();
-  let theMaterial = this;
-  Object.keys(this.program.uniforms).forEach( function(uniformName) {
-    let uniform = theMaterial.program.uniforms[uniformName];
-    theMaterial[uniformName].commit(gl, uniform.location);
-  });
-};
+class Material {
+
+  constructor(gl, program) {
+
+    this.gl = gl;
+    this.program = program;
+
+    const mat = this;
+
+    Object.keys(program.uniforms).forEach(function(name) {
+
+      const uniform = program.uniforms[name];
+      const val = UniformReflection.makeVar(gl, uniform.type, uniform.size);
+      Object.defineProperty(mat, name, { value: val } );
+
+    });
+
+  }
+
+  commit() {
+
+    this.program.commit();
+
+    const mat = this;
+
+    Object.keys(this.program.uniforms).forEach( function(name) {
+
+      let uniform = mat.program.uniforms[name];
+      mat[name].commit(mat.gl, uniform.location);
+
+    });
+
+  }
+
+}

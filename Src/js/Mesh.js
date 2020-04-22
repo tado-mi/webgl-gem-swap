@@ -1,10 +1,20 @@
-"use strict"; 
-let Mesh = function(geometry, material) {
-  this.geometry = geometry;
-  this.material = material;
-};
- 
-Mesh.prototype.draw = function(){
-  this.material.commit();
-  this.geometry.draw();
-};
+"use strict";
+
+class Mesh {
+
+  constructor(g, m) {
+
+    this.matl = m; // material
+    this.geom = g; // geometry
+
+  };
+   
+  draw() {
+
+    this.matl.commit();
+    this.geom.draw();
+
+  };
+
+
+}
