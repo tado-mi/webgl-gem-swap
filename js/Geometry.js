@@ -48,6 +48,10 @@ class generalGeometry {
 
     let gl = this.gl;
 
+    if (this.n == 3) {
+      console.log('color:', this.colSet);
+    }
+
     this.colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colSet), gl.STATIC_DRAW);
@@ -259,7 +263,7 @@ class triangleGeometry  extends starGeometry {
     this.r = 0.4;
     this.R = 0.8;
 
-    this.col = [0.4, 0.9, 0.6];
+    this.col = [0.0, 0.0, 0.0];
 
   }
 
