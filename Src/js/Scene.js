@@ -25,22 +25,30 @@ class Scene {
     // generate meshes
     // create geomteries
     const geom = [
-      new StarGeometry(gl),
-      new StarGeometry2(gl),
-      new HeartGeometry(gl),
-      new DiamondGeometry(gl)
+      new heartGeometry(gl),
+      new starGeometry(gl),
+      new squareGeometry(gl),
+      new crossGeometry(gl),
+      new triangleGeometry(gl),
+      new diamondGeometry(gl),
+      new sphereGeometry(gl),
+      new flowerGeometry(gl)
     ];
 
     this.mesh = [
       new Mesh(geom[0], this.material['color']),
-      new Mesh(geom[1], this.material['color']),
+      new Mesh(geom[1], this.material['color']), // star
       new Mesh(geom[2], this.material['color']),
-      new Mesh(geom[2], this.material['pulsate']),
-      new Mesh(geom[3], this.material['color'])
+      new Mesh(geom[3], this.material['color']),
+      new Mesh(geom[4], this.material['pulsate']),
+      new Mesh(geom[5], this.material['color']), // diamond
+      new Mesh(geom[6], this.material['color']),
+      new Mesh(geom[7], this.material['pulsate']),
     ]
 
     this.star_ID = 1;
-    this.diamond_ID = 4;
+    this.diamond_ID = 5;
+    this.numObjs = 8;
 
     // generate game objects
     this.gameObjects = [];
@@ -132,7 +140,7 @@ class Scene {
 
   getObject(i, j) {
 
-    const id = Math.floor(Math.random() * 5);
+    const id = Math.floor(Math.random() * this.numObjs);
     const temp = this.mesh[id];
 
     let gameObject = new GameObject(temp);
