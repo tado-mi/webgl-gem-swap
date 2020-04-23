@@ -17,14 +17,14 @@ class Scene {
     // generate meshes
     // create geomteries
     const geom = [
-      new heartGeometry(gl),
-      new starGeometry(gl),
-      new squareGeometry(gl),
-      new crossGeometry(gl),
-      new triangleGeometry(gl),
-      new diamondGeometry(gl),
-      new sphereGeometry(gl),
-      new flowerGeometry(gl)
+      new heartGeometry(gl, [226/255, 169/255, 190/255]),
+      new starGeometry(gl, [241/255, 233/255, 203/255]),
+      new squareGeometry(gl, [194/255, 213/255, 167/255]),
+      new crossGeometry(gl, [176/255, 171/255, 202/255]),
+      new triangleGeometry(gl, [225/255, 198/255, 172/255]),
+      new diamondGeometry(gl, [163/255, 214/255, 212/255]),
+      new sphereGeometry(gl, [212/255, 214/255, 163/255]),
+      new flowerGeometry(gl, [255/255, 169/255, 190/255])
     ];
 
     this.mesh = [
@@ -125,11 +125,7 @@ class Scene {
     const id = Math.floor(Math.random() * this.numObjs);
     const temp = this.mesh[id];
 
-    let gameObject = new GameObject(temp);
-    gameObject.ID = id;
-    if (id == this.rotate_ID) {
-      gameObject.setRotation(new Vector3D(0, 1, 0));
-    }
+    let gameObject = new GameObject(temp, id);
 
     if (i < 2 || i > 11 || j < 2 || j > 11)	{
       gameObject.scale.set(0, 0, 0);
@@ -165,11 +161,7 @@ class Scene {
           curr.isFalling = true;
           if (curr.position.y <= focus.position.y) {
 
-            this.gameObjects[i][j] = new GameObject(curr.mesh);
-            this.gameObjects[i][j].ID = curr.ID;
-            if (this.gameObjects[i][j].ID == this.rotate_ID) {
-              this.gameObjects[i][j].setRotation(new Vector3D(0, 1, 0));
-            }
+            this.gameObjects[i][j] = new GameObject(curr.mesh, curr.ID);
             curr.ID = -1;
 
             curr.scale.set(0,0,0);
@@ -200,7 +192,12 @@ class Scene {
 
         const focus = this.gameObjects[i][j];
 
-        if (focus.ID == this.rotate_ID || focus.ID == this.spin_ID) {
+        if (focus.ID == this.spin_ID) {
+          focus.rotate(dt);
+        }
+
+        if (focus.ID == this.rotate_ID) {
+          focus.setRotation(new Vector3D(0, 1, 0));
           focus.rotate(dt);
         }
 
@@ -282,11 +279,9 @@ class Scene {
 
       if (vertical || horizontal) { // swap
 
-        this.gameObjects[up.x][up.y] = new GameObject(downObj.mesh);
-        this.gameObjects[up.x][up.y].ID = downObj.ID;
+        this.gameObjects[up.x][up.y] = new GameObject(downObj.mesh, downObj.ID);
 
-        this.gameObjects[down.x][down.y] = new GameObject(upObj.mesh);
-        this.gameObjects[down.x][down.y].ID = upObj.ID;
+        this.gameObjects[down.x][down.y] = new GameObject(upObj.mesh, upObj.ID);
 
         this.startSwap = true;
 

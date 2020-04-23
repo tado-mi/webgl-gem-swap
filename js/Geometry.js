@@ -1,9 +1,10 @@
 "use strict";
 class generalGeometry {
 
-  constructor(gl) {
+  constructor(gl, col) {
 
     this.gl = gl;
+    this.col = col;
     this.set();
 
   }
@@ -22,13 +23,17 @@ class generalGeometry {
 
   genColSet() {
 
-    this.colSet = [];
+    if (this.colSet == undefined) {
 
-    // color of the endpoints
-    // this.col will be set up for each geometry individually
-    for (var i = 0; i < (2 * this.n + 1); i = i + 1) {
+      this.colSet = [];
 
-      this.colSet = this.colSet.concat(this.col);
+      // color of the endpoints
+      // this.col will be set up for each geometry individually
+      for (var i = 0; i < (2 * this.n + 1); i = i + 1) {
+
+        this.colSet = this.colSet.concat(this.col);
+
+      }
 
     }
 
@@ -86,7 +91,6 @@ class generalGeometry {
     this.setPointBuffer();
 
     // set of colors for vertices for the geometry
-    this.colSet = [];
     // generate and bind the colors
     this.genColSet();
     // set up the buffer
@@ -99,7 +103,7 @@ class generalGeometry {
 
   draw() {
 
-    let gl = this.gl;
+    const gl = this.gl;
 
     // setting positions to pipeline input
     gl.bindBuffer(gl.ARRAY_BUFFER, this.pointBuffer);
@@ -117,6 +121,7 @@ class generalGeometry {
     // draw
     gl.drawElements(gl.TRIANGLES, 2 * 3 * this.n, gl.UNSIGNED_SHORT, 0);
 
+
   }
 
 };
@@ -126,7 +131,9 @@ class heartGeometry     extends generalGeometry {
   setParameters() {
 
     this.n = 20;
-    this.col = [1.0, 0.4, 0.5];
+    if (this.col == undefined) {
+      this.col = [1.0, 0.4, 0.5];
+    }
 
   }
 
@@ -169,7 +176,9 @@ class starGeometry      extends generalGeometry {
     this.r = 0.4;
     this.R = 0.8;
 
-    this.col = [1.0, 1.0, 0.4];
+    if (this.col == undefined) {
+      this.col = [1.0, 1.0, 0.4];
+    }
 
   }
 
@@ -207,7 +216,9 @@ class squareGeometry    extends generalGeometry {
     this.r = 0.8;
     this.R = 0.8;
 
-    this.col = [1.0, 1.0, 0.8];
+    if (this.col == undefined) {
+      this.col = [1.0, 1.0, 0.8];
+    }
 
   }
 
@@ -245,7 +256,9 @@ class crossGeometry     extends starGeometry {
     this.r = 0.35;
     this.R = 0.8;
 
-    this.col = [0.7, 0.7, 1.0];
+    if (this.col == undefined) {
+      this.col = [0.7, 0.7, 1.0];
+    }
 
   }
 
@@ -259,7 +272,9 @@ class triangleGeometry  extends starGeometry {
     this.r = 0.4;
     this.R = 0.8;
 
-    this.col = [1.0, 0.8, 0.3];
+    if (this.col == undefined) {
+      this.col = [1.0, 0.8, 0.3];
+    }
 
   }
 
@@ -273,7 +288,9 @@ class diamondGeometry   extends starGeometry {
     this.r = 0.5;
     this.R = 0.7;
 
-    this.col = [0.7, 1.0, 1.0];
+    if (this.col == undefined) {
+      this.col = [0.7, 1.0, 1.0];
+    }
 
   }
 
@@ -287,7 +304,9 @@ class sphereGeometry    extends starGeometry {
     this.r = 0.7;
     this.R = 0.7;
 
-    this.col = [0.95, 0.70, 0.80];
+    if (this.col == undefined) {
+      this.col = [0.95, 0.70, 0.80];
+    }
 
   }
 
@@ -301,7 +320,9 @@ class flowerGeometry    extends starGeometry {
     this.r = 0.6;
     this.R = 0.8;
 
-    this.col = [0.7, 0.9, 0.5];
+    if (this.col == undefined) {
+      this.col = [0.7, 0.9, 0.5];
+    }
 
   }
 
