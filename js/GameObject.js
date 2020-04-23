@@ -4,7 +4,7 @@ class GameObject {
   constructor(mesh) {
 
     this.mesh = mesh;
-    this.typeID;
+    this.ID;
 
     this.position = new Vector3D(-55, -55, 0);
     this.matrix   = new Mat4();
@@ -18,8 +18,11 @@ class GameObject {
     this.axisRotation = new Vector3D(0,0,0);
 
     // shrink
-    this.startShrink = false;
+    this.shrinking = false;
     this.scale = new Vector3D(0.45, 0.45, 1);
+
+    this.factor = 0.45;
+    this.diff = 0.005;
 
   };
 
@@ -54,7 +57,6 @@ class GameObject {
 
   }
 
-
   shrink() {
 
     if (this.scale.x < 0.035){
@@ -76,9 +78,9 @@ class GameObject {
       rotate(this.ang, this.axisRotation).
       translate(this.position);
 
-  };
+  }
 
-  draw(camera) {
+  draw (camera) {
 
     this.update();
 
@@ -87,6 +89,23 @@ class GameObject {
       mul(camera.matrix);
 
     this.mesh.draw();
-  };
+  }
+
+  pulse () {
+
+    if (!this.shrinking) {
+      this.scale.sub(this.diff, this.diff, 1.0);
+      if (this.factor < 0.45 * 0.6 || this.factor > 0.45 * 1.1) {
+        this.diff = -1 * this.diff;
+      }
+      this.factor -= this.diff;
+    }
+
+
+
+
+  }
+
+
 
 }
