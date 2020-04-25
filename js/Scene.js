@@ -5,43 +5,55 @@ class Scene {
   constructor(gl) {
 
     // create shaders
-    const vs = new Shader(gl, gl.VERTEX_SHADER, "idle_vs.essl");
-    const frag = new Shader(gl, gl.FRAGMENT_SHADER, "color_fs.essl");
+    const shader = {
+      'vs': new Shader(gl, gl.VERTEX_SHADER, "idle_vs.essl"),
+      'color': new Shader(gl, gl.FRAGMENT_SHADER, "color_fs.essl"),
+      'shine': new Shader(gl, gl.FRAGMENT_SHADER, "shine_fs.essl")
+    }
 
     // create the program
-    const colorProgram   = new Program(gl, vs, frag);
+    const program = {
+      'color': new Program(gl, shader.vs, shader.color),
+      'shine': new Program(gl, shader.vs, shader.shine)
+    }
 
     // create the material
-    const material = new Material(gl, colorProgram);
+    this.material = {
+      'color': new Material(gl, program.color),
+      'shine': new Material(gl, program.shine)
+    };
+
+    // create geomteries
+    const geom = {
+      'heart': new heartGeometry(gl, [226/255, 169/255, 190/255]),
+      'star': new starGeometry(gl, [241/255, 233/255, 203/255]),
+      'square': new squareGeometry(gl, [194/255, 213/255, 167/255]),
+      'cross': new crossGeometry(gl, [176/255, 171/255, 202/255]),
+      'triangle': new triangleGeometry(gl, [225/255, 198/255, 172/255]),
+      'diamond': new diamondGeometry(gl, [163/255, 214/255, 212/255]),
+      'sphere': new sphereGeometry(gl, [212/255, 214/255, 163/255]),
+      'flower': new flowerGeometry(gl, [255/255, 169/255, 190/255])
+    };
 
     // generate meshes
-    // create geomteries
-    const geom = [
-      new heartGeometry(gl, [226/255, 169/255, 190/255]),
-      new starGeometry(gl, [241/255, 233/255, 203/255]),
-      new squareGeometry(gl, [194/255, 213/255, 167/255]),
-      new crossGeometry(gl, [176/255, 171/255, 202/255]),
-      new triangleGeometry(gl, [225/255, 198/255, 172/255]),
-      new diamondGeometry(gl, [163/255, 214/255, 212/255]),
-      new sphereGeometry(gl, [212/255, 214/255, 163/255]),
-      new flowerGeometry(gl, [255/255, 169/255, 190/255])
-    ];
+    const { color, shine } = this.material;
+    const { heart, star, square, cross, triangle, diamond, sphere, flower } = geom;
 
+    this.numObjs = 8;
     this.mesh = [
-      new Mesh(geom[0], material), // heart
-      new Mesh(geom[1], material), // star
-      new Mesh(geom[2], material),
-      new Mesh(geom[3], material),
-      new Mesh(geom[4], material),
-      new Mesh(geom[5], material), // diamond
-      new Mesh(geom[6], material),
-      new Mesh(geom[7], material),
+      new Mesh(heart, color),
+      new Mesh(star, color),
+      new Mesh(square, color),
+      new Mesh(cross, color),
+      new Mesh(triangle, color),
+      new Mesh(diamond, color),
+      new Mesh(sphere, shine),
+      new Mesh(flower, color)
     ]
 
     this.spin_ID = 1;
     this.rotate_ID = 5;
     this.pulsate_ID = 0;
-    this.numObjs = 8;
 
     // generate game objects
     this.gameObjects = [];
@@ -65,6 +77,9 @@ class Scene {
 
     this.score = 0;
     this.plusScore = 0;
+
+    this.factor = 1.0;
+    this.shine = 0.3;
 
   };
 
@@ -185,6 +200,12 @@ class Scene {
   animate() {
 
     const dt = 0.01;
+
+    this.shine = this.shine + (this.factor * dt);
+    if (this.shine < 0.3 || this.shine > 1.0) {
+      this.factor = - this.factor;
+    }
+    this.material.shine.factor.set(new Vec1(this.shine));
 
     for (var i = 0; i < 14; i = i + 1) {
 
