@@ -8,7 +8,7 @@ Shader.source[document.currentScript.src.split('js/shaders/')[1]] = `
 
 	void main(void) {
 
-		gl_FragColor = vec4(factor * color, 1.0);
+		gl_FragColor = vec4(factor * color, factor);
 
 	}
 `;

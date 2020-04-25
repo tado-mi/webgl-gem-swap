@@ -25,21 +25,21 @@ class Scene {
 
     // create geomteries
     const geom = {
-      'heart': new heartGeometry(gl, [226/255, 169/255, 190/255]),
-      'star': new starGeometry(gl, [241/255, 233/255, 203/255]),
-      'square': new squareGeometry(gl, [194/255, 213/255, 167/255]),
-      'cross': new crossGeometry(gl, [176/255, 171/255, 202/255]),
-      'triangle': new triangleGeometry(gl, [225/255, 198/255, 172/255]),
-      'diamond': new diamondGeometry(gl, [163/255, 214/255, 212/255]),
-      'sphere': new sphereGeometry(gl, [212/255, 214/255, 163/255]),
-      'flower': new flowerGeometry(gl, [255/255, 169/255, 190/255])
+      'heart':  new HeartGeometry(gl),
+      'star':   new StarGeometry(gl),
+      'square': new SquareGeometry(gl),
+      'cross':  new CrossGeometry(gl),
+      'triangle': new TriangleGeometry(gl),
+      'diamond':  new DiamondGeometry(gl),
+      'sphere': new SphereGeometry(gl),
+      'flower': new FlowerGeometry(gl)
     };
 
     // generate meshes
     const { color, shine } = this.material;
     const { heart, star, square, cross, triangle, diamond, sphere, flower } = geom;
 
-    this.numObjs = 4;
+    this.numObjs = 8;
     this.mesh = [
       new Mesh(heart, color),
       new Mesh(star, color),
@@ -69,7 +69,6 @@ class Scene {
 
     }
 
-    this.rotateAngle = 0.005;
     this.camera = new OrthoCamera();
 
     this.startSwap = false;
@@ -397,7 +396,6 @@ class Scene {
                 diff *= 2;
               }
               this.plusScore += diff;
-              console.log('plusScore: ', this.plusScore);
               // this.plusScoreOpacity -= 0.05;
 
             }
@@ -452,7 +450,6 @@ class Scene {
 
               diff += r - l + 1;
               this.plusScore += diff;
-              console.log('plusScore: ', this.plusScore);
               // this.plusScoreOpacity -= 0.05;
 
             }
@@ -462,7 +459,6 @@ class Scene {
           if (success) {
 
             this.score += this.plusScore;
-            console.log('score: ', this.score);
             this.scoreNode.nodeValue = String(this.score);
 
           }

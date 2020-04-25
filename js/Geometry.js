@@ -1,5 +1,17 @@
 "use strict";
-class generalGeometry {
+
+const colors = {
+  'heart': [226/255, 169/255, 190/255],
+  'star':  [241/255, 233/255, 203/255],
+  'square': [194/255, 213/255, 167/255],
+  'cross':  [176/255, 171/255, 202/255],
+  'diamond':  [163/255, 214/255, 212/255],
+  'triangle': [203/255, 233/255, 241/255],
+  'flower':   [0.9, 0.9, 0.9],
+  'sphere':   [1.0, 1.0, 1.0]
+};
+
+class Geometry {
 
   constructor(gl, col) {
 
@@ -126,13 +138,13 @@ class generalGeometry {
 
 };
 
-class heartGeometry     extends generalGeometry {
+class HeartGeometry     extends Geometry {
 
   setParameters() {
 
     this.n = 20;
     if (this.col == undefined) {
-      this.col = [1.0, 0.4, 0.5];
+      this.col = colors.heart;
     }
 
   }
@@ -168,7 +180,7 @@ class heartGeometry     extends generalGeometry {
 
 };
 
-class starGeometry      extends generalGeometry {
+class StarGeometry      extends Geometry {
 
   setParameters() {
 
@@ -177,7 +189,7 @@ class starGeometry      extends generalGeometry {
     this.R = 0.8;
 
     if (this.col == undefined) {
-      this.col = [1.0, 1.0, 0.4];
+      this.col = colors.star;
     }
 
   }
@@ -208,7 +220,7 @@ class starGeometry      extends generalGeometry {
 
 };
 
-class squareGeometry    extends generalGeometry {
+class SquareGeometry    extends Geometry {
 
   setParameters() {
 
@@ -217,7 +229,7 @@ class squareGeometry    extends generalGeometry {
     this.R = 0.8;
 
     if (this.col == undefined) {
-      this.col = [1.0, 1.0, 0.8];
+      this.col = colors.square;
     }
 
   }
@@ -248,7 +260,7 @@ class squareGeometry    extends generalGeometry {
 
 };
 
-class crossGeometry     extends starGeometry {
+class CrossGeometry     extends StarGeometry {
 
   setParameters() {
 
@@ -257,14 +269,14 @@ class crossGeometry     extends starGeometry {
     this.R = 0.8;
 
     if (this.col == undefined) {
-      this.col = [0.7, 0.7, 1.0];
+      this.col = [176/255, 171/255, 202/255];
     }
 
   }
 
 };
 
-class triangleGeometry  extends starGeometry {
+class TriangleGeometry  extends StarGeometry {
 
   setParameters() {
 
@@ -273,14 +285,14 @@ class triangleGeometry  extends starGeometry {
     this.R = 0.8;
 
     if (this.col == undefined) {
-      this.col = [1.0, 0.8, 0.3];
+      this.col = colors.triangle;
     }
 
   }
 
 };
 
-class diamondGeometry   extends starGeometry {
+class DiamondGeometry   extends StarGeometry {
 
   setParameters() {
 
@@ -289,14 +301,14 @@ class diamondGeometry   extends starGeometry {
     this.R = 0.7;
 
     if (this.col == undefined) {
-      this.col = [0.7, 1.0, 1.0];
+      this.col = colors.diamond;
     }
 
   }
 
 };
 
-class sphereGeometry    extends starGeometry {
+class SphereGeometry    extends StarGeometry {
 
   setParameters() {
 
@@ -305,23 +317,23 @@ class sphereGeometry    extends starGeometry {
     this.R = 0.7;
 
     if (this.col == undefined) {
-      this.col = [0.95, 0.70, 0.80];
+      this.col = colors.sphere;
     }
 
   }
 
 };
 
-class flowerGeometry    extends starGeometry {
+class FlowerGeometry    extends StarGeometry {
 
   setParameters() {
 
-    this.n = 10;
-    this.r = 0.6;
+    this.n = 7;
+    this.r = 0.5;
     this.R = 0.8;
 
     if (this.col == undefined) {
-      this.col = [0.7, 0.9, 0.5];
+      this.col = colors.flower;
     }
 
   }
