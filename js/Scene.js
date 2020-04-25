@@ -39,7 +39,7 @@ class Scene {
     const { color, shine } = this.material;
     const { heart, star, square, cross, triangle, diamond, sphere, flower } = geom;
 
-    this.numObjs = 8;
+    this.numObjs = 4;
     this.mesh = [
       new Mesh(heart, color),
       new Mesh(star, color),
@@ -77,6 +77,10 @@ class Scene {
 
     this.score = 0;
     this.plusScore = 0;
+
+    const scoreElement = document.getElementById("score");
+    this.scoreNode = document.createTextNode("");
+    scoreElement.appendChild(this.scoreNode);
 
     this.factor = 1.0;
     this.shine = 0.3;
@@ -268,7 +272,15 @@ class Scene {
 
     if (mouse.pressedUp) {
 
-      if (Math.abs(down.x - up.x) > 1 || Math.abs(down.y - up.y) > 1) {
+      const xDiff = Math.abs(down.x - up.x), yDiff = Math.abs(down.y - up.y);
+
+      const isLegal =
+        // must be on same row and withing one entry
+        yDiff == 0 && xDiff == 1 ||
+        // or on the same column and within one entry
+        xDiff == 0 && yDiff == 1;
+
+      if (!isLegal) {
         return;
       }
 
@@ -319,11 +331,12 @@ class Scene {
   victories() {
 
       var timerPlus = 20;
-      this.plusScore = 0;
 
       for (var i = 2; i < 13; i = i + 1) {
 
         for(var j = 2; j < 13; j = j + 1) {
+
+          this.plusScore = 0;
 
           const focus = this.gameObjects[i][j];
           if (focus.ID == -1 || focus.isFalling) {
@@ -379,8 +392,12 @@ class Scene {
 
             if (!this.gameOver && this.startSwap) {
 
-              diff += r - l;
-              this.plusScore += diff * 10;
+              diff += r - l + 1;
+              if (diff > 4) {
+                diff *= 2;
+              }
+              this.plusScore += diff;
+              console.log('plusScore: ', this.plusScore);
               // this.plusScoreOpacity -= 0.05;
 
             }
@@ -433,8 +450,9 @@ class Scene {
 
             if (!this.gameOver && this.startSwap) {
 
-              diff += r - l;
-              this.plusScore += diff * 10;
+              diff += r - l + 1;
+              this.plusScore += diff;
+              console.log('plusScore: ', this.plusScore);
               // this.plusScoreOpacity -= 0.05;
 
             }
@@ -444,6 +462,8 @@ class Scene {
           if (success) {
 
             this.score += this.plusScore;
+            console.log('score: ', this.score);
+            this.scoreNode.nodeValue = String(this.score);
 
           }
 
