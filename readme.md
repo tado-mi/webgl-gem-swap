@@ -4,6 +4,10 @@ Code written by [Megan Zhao](https://github.com/meganzhao), forked and modified 
 
 Following is an implementation of the well known game [Bejeweled](https://zone.msn.com/en/bejeweled/), written while taking **Computer Graphics**  course at the [Aquincumi Institute of Technology](https://www.ait-budapest.com/). It is made public to demonstrate a code sample by the authors, and for learning. We trust it will not be used to violate academic honesty policies.
 
+# Demo of the current version
+
+![screenshot](demo.png)
+
 ## Running
 ```
 # Clone this repository
